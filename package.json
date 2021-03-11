@@ -1,0 +1,29 @@
+{
+  "name": "rx-store",
+  "version": "0.0.0",
+  "description": "An RsJs-based store infrastructure for arbitrary-keyed data.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shevchenkobn/rx-store.git"
+  },
+  "keywords": [
+    "rx",
+    "rx-store",
+    "store",
+    "cache",
+    "rx-cache"
+  ],
+  "author": "Bogdan Shevchenko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shevchenkobn/rx-store/issues"
+  },
+  "homepage": "https://github.com/shevchenkobn/rx-store#readme",
+  "dependencies": {
+    "rxjs": "~6.4.0"
+  }
+}
