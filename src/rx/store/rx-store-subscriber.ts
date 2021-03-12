@@ -1,5 +1,5 @@
 import { ObservableTransformer, valueNoop } from '../bus/types';
-import { Observable, Subscription, Subject } from 'rxjs';
+import { Observable, Subscription, Subject, noop } from 'rxjs';
 import { RxStore } from './rx-store';
 import { rxBusNoValue } from '../bus/types';
 import { RxStoreSubscriberConfig } from './types';
@@ -49,7 +49,9 @@ export class RxStoreSubscriber<K, V, VI = V, S extends RxStore<K, VI, any, any, 
     } else {
       this.key = rxBusNoValue;
     }
-    this.setDestroyObservable(config.destroyObservable);
+    if (config.destroyObservable) {
+      this.setDestroyObservable(config.destroyObservable);
+    }
   }
 
   setKey(key: K): this {
@@ -72,13 +74,14 @@ export class RxStoreSubscriber<K, V, VI = V, S extends RxStore<K, VI, any, any, 
     if (this.destroyObservableSubscription) {
       this.destroyObservableSubscription.unsubscribe();
     }
-    this.destroyObservableSubscription = observable.pipe(finalize(() => {
+    const onComplete = () => {
       this.unsubscribe();
       if (this.destroyObservableSubscription) {
         this.destroyObservableSubscription.unsubscribe();
         this.destroyObservableSubscription = null;
       }
-    })).subscribe();
+    };
+    this.destroyObservableSubscription = observable.subscribe(noop, onComplete, onComplete);
     return this;
   }
 
@@ -98,10 +101,11 @@ export class RxStoreSubscriber<K, V, VI = V, S extends RxStore<K, VI, any, any, 
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    const onComplete = () => this.unsubscribe();
     this.subscription = this.observableTransformer(this.store.byKey.on(this.key)).subscribe(
       value => this.subject.next(value),
-      () => this.unsubscribe(),
-      () => this.unsubscribe(),
+      onComplete,
+      onComplete,
     );
   }
 }

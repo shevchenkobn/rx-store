@@ -69,6 +69,7 @@ export type DataLoader<K, V, KR = K> = (key: K, keyTrasformer: RxStoreKeyTransfo
 
 export interface RxStoreByKey<K, V> {
   cacheEnabledByDefault: boolean;
+  noCachedValueFactory?: RxBusValueFactory<K, V>;
   on<T extends V = V>(key: K): Observable<T>;
   isCacheEnabled(key: K): boolean;
   hasCachedValue(key: K): boolean;
